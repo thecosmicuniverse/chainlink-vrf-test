@@ -38,6 +38,7 @@ h1 {
   font-size: 3.2em;
   line-height: 1;
   margin: 0;
+  text-align: center;
 }
 
 #app {
@@ -106,4 +107,20 @@ th, td {
 
 p {
   margin: 0;
+  text-align: center;
+}
+
+#github-corner {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding-top: 32px;
+  padding-right: 32px;
+  background: linear-gradient(to top right, #FFFFFF 0%, #FFFFFF 50%, transparent 50%, transparent 100%);
+}
+
+#github-corner svg {
+  scale: 0.5;
+  margin-left: -16px;
+  margin-bottom: -16px;
 }
