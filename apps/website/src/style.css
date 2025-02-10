@@ -18,6 +18,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -28,13 +29,15 @@ body {
   flex-direction: column;
   place-items: center;
   justify-content: center;
+  gap: 16px;
   min-width: 320px;
   min-height: 100vh;
 }
 
 h1 {
   font-size: 3.2em;
-  line-height: 1.1;
+  line-height: 1;
+  margin: 0;
 }
 
 #app {
@@ -50,9 +53,11 @@ h1 {
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vanilla:hover {
   filter: drop-shadow(0 0 2em #3178c6aa);
 }
@@ -76,9 +81,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -88,10 +95,15 @@ button:focus-visible {
 table {
   border: 1px solid #bbbbbb;
   padding: 8px;
-  margin-top: 34px
+  margin: 0;
 }
+
 th, td {
   border: 1px solid #bbbbbb;
   padding: 4px 8px;
   text-align: center;
+}
+
+p {
+  margin: 0;
 }
