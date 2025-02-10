@@ -6,6 +6,7 @@ import {VRFConsumerBaseV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/VRFCo
 import {IVRFCoordinatorV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/interfaces/IVRFCoordinatorV2Plus.sol";
 
 contract SimpleVRF is VRFConsumerBaseV2Plus {
+    event RandomNumberRequested(address indexed from, uint256 requestId);
     event RandomnessFulfilled(uint256 requestId, uint256 randomNumber, uint256 blockNumber, uint256 timestamp);
 
     IVRFCoordinatorV2Plus public immutable coordinator;
@@ -20,13 +21,14 @@ contract SimpleVRF is VRFConsumerBaseV2Plus {
 
     function requestRandomNumber() external returns (uint256 requestId) {
         requestId = coordinator.requestRandomWords(VRFV2PlusClient.RandomWordsRequest({
-        keyHash: keyHash,
-        subId: subscriptionId,
-        requestConfirmations: 1,
-        callbackGasLimit: 100000,
-        numWords: 1,
-        extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false})) // new parameter
+            keyHash: keyHash,
+            subId: subscriptionId,
+            requestConfirmations: 1,
+            callbackGasLimit: 100000,
+            numWords: 1,
+            extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false})) // new parameter
         }));
+        emit RandomNumberRequested(msg.sender, requestId);
     }
 
     function fulfillRandomWords(uint256 requestId, uint256[] calldata randomWords) internal override {
