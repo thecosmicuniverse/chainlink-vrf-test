@@ -9,7 +9,8 @@
     "hardhat:compile": "pnpm hardhat run compile",
     "hardhat:test": "pnpm hardhat run test",
     "hardhat:deploy": "pnpm hardhat run deploy",
-    "website:dev": "pnpm website dev"
+    "website:dev": "pnpm website dev",
+    "website:build": "pnpm website build"
   },
   "keywords": [],
   "author": "",
