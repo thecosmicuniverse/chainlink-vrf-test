@@ -1,0 +1,22 @@
+{
+  "name": "chainlink-vrf-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "hardhat": "pnpm --filter hardhat",
+    "website": "pnpm --filter website",
+    "hardhat:compile": "pnpm hardhat run compile",
+    "hardhat:test": "pnpm hardhat run test",
+    "hardhat:deploy": "pnpm hardhat run deploy",
+    "website:dev": "pnpm website dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=23.7.0"
+  },
+  "type": "module",
+  "packageManager": "pnpm@10.2.1+sha512.398035c7bd696d0ba0b10a688ed558285329d27ea994804a52bad9167d8e3a72bcb993f9699585d3ca25779ac64949ef422757a6c31102c12ab932e5cbe5cc92"
+}
