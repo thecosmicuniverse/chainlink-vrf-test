@@ -85,7 +85,7 @@ const checkChain = async () => {
       await walletClient.addChain({ chain: avalancheFuji });
       await walletClient.switchChain({ id: avalancheFuji.id });
     }
-  } catch (e) {
+  } catch (e: any) {
     setError(e.message);
   }
 }
@@ -134,7 +134,7 @@ const requestRandomNumber = async () => {
     row.insertCell().textContent = "0.000s";
     row.insertCell().textContent = "0.000s";
     row.insertCell().textContent = "0.000s";
-  } catch (err) {
+  } catch (err: any) {
     console.error("Transaction failed", err);
     requestButton().disabled = false;
     setError(err.message);
@@ -166,7 +166,7 @@ const updateBalance = async () => {
       balanceText().textContent = Number(Number(formatEther(balance)).toFixed(3)).toString();
       balanceText().style.color = balance < parseEther("0.01") ? "red" : "white";
     }
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     setError(e.message);
   }
