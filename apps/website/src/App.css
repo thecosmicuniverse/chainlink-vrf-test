@@ -1,9 +1,52 @@
+@import "tailwindcss";
+
+body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -23,7 +66,7 @@ a:hover {
   color: #535bf2;
 }
 
-body {
+#root {
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -110,29 +153,8 @@ p {
   text-align: center;
 }
 
-#error {
-  background-color: #ff6666;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
-  border-radius: 16px;
-  max-width: 50%;
-  overflow-x: scroll;
-  white-space: nowrap;
-}
 
-#github-corner {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  padding-top: 32px;
-  padding-right: 32px;
+
+.bg-triangle {
   background: linear-gradient(to top right, #FFFFFF 0%, #FFFFFF 50%, transparent 50%, transparent 100%);
-}
-
-#github-corner svg {
-  scale: 0.5;
-  margin-left: -16px;
-  margin-bottom: -16px;
 }
