@@ -4,6 +4,8 @@ import {
   createWalletClient,
   custom,
   CustomTransport,
+  formatEther,
+  parseEther,
   PublicClient,
   WalletClient,
   webSocket,
@@ -56,8 +58,12 @@ let requests: {
 }[] = [];
 let requestIndex: number = 0;
 
+const requestButton = () => document.getElementById("requestButton") as HTMLButtonElement;
+const historyTable = () => document.getElementById("history") as HTMLTableElement;
+const balanceText = () => document.getElementById("balance") as HTMLSpanElement;
+
 // Connect to MetaMask
-async function connect() {
+const connect = async () => {
   walletClient = createWalletClient({
     chain: avalancheFuji,
     transport: custom((window as any).ethereum),
@@ -67,17 +73,41 @@ async function connect() {
     chain: avalancheFuji,
     transport: webSocket("wss://api.avax-test.network/ext/bc/C/ws"),
   });
-  await walletClient.switchChain({ id: avalancheFuji.id });
-
   console.log("Connected!");
+  await updateBalance();
+}
+
+const checkChain = async () => {
+  if (!walletClient) return;
+  try {
+    const currentChainId = await walletClient.getChainId();
+    if (currentChainId !== avalancheFuji.id) {
+      await walletClient.addChain({ chain: avalancheFuji });
+      await walletClient.switchChain({ id: avalancheFuji.id });
+    }
+  } catch (e) {
+    setError(e.message);
+  }
+}
+
+const setError = (error: string | undefined = undefined)=> {
+  const elem = document.getElementById("error") as HTMLElement;
+  if (error) {
+    elem.textContent = error;
+    elem.style.display = "block";
+  } else {
+    elem.textContent = "";
+    elem.style.display = "none";
+  }
 }
 
 // Request a random number from the contract
-async function requestRandomNumber() {
-  (document.getElementById("requestButton") as HTMLButtonElement).disabled = true;
+const requestRandomNumber = async () => {
 
   try {
     if (!walletClient) await connect();
+    await updateBalance();
+    await checkChain();
     const [account] = await walletClient.getAddresses();
     const { request } = await client.simulateContract({
       address: CONTRACT_ADDRESS,
@@ -96,7 +126,7 @@ async function requestRandomNumber() {
       randomNumber: 0n,
       times: { start: Date.now(), requested: 0, completed: 0, total: 0 }
     }) - 1;
-    const row = (document.getElementById("history") as HTMLTableElement).insertRow();
+    const row = historyTable().insertRow();
     row.insertCell().textContent = (requestIndex + 1).toString();
     row.insertCell().textContent = "Pending...";
     const d = new Date(requests[requestIndex].times.start);
@@ -106,13 +136,14 @@ async function requestRandomNumber() {
     row.insertCell().textContent = "0.000s";
   } catch (err) {
     console.error("Transaction failed", err);
-    (document.getElementById("requestButton") as HTMLButtonElement).disabled = false;
+    requestButton().disabled = false;
+    setError(err.message);
   }
-}
+};
 
 // Update the timer
 function updateTimer() {
-  const row = (document.getElementById("history") as HTMLTableElement).rows[requestIndex + 1];
+  const row = historyTable().rows[requestIndex + 1];
   if (!row) return;
   requests[requestIndex].times.total = (Date.now() - requests[requestIndex].times.start) / 1000;
   row.cells[5].textContent = requests[requestIndex].times.total.toFixed(3) + "s";
@@ -125,10 +156,26 @@ function updateTimer() {
   }
 }
 
+const updateBalance = async () => {
+  if (!walletClient) return;
+  try {
+    const accounts = await walletClient.getAddresses();
+    if (accounts.length) {
+      const balance = await client.getBalance({ address: accounts[0] });
+      requestButton().disabled = balance < parseEther("0.01");
+      balanceText().textContent = Number(Number(formatEther(balance)).toFixed(3)).toString();
+      balanceText().style.color = balance < parseEther("0.01") ? "red" : "white";
+    }
+  } catch (e) {
+    console.error(e);
+    setError(e.message);
+  }
+};
+
 // Listen for the RandomnessFulfilled event
 async function listenForRandomness() {
   if (!client) await connect();
-
+  await updateBalance();
   client.watchEvent({
     address: CONTRACT_ADDRESS,
     event: abi[0],
@@ -137,7 +184,7 @@ async function listenForRandomness() {
         if (log.eventName !== "RandomNumberRequested") return;
         console.log(`Request ID found: ${log.args.requestId}`);
         requests[requestIndex].requestId = log.args.requestId!;
-        (document.getElementById("history") as HTMLTableElement).rows[requestIndex + 1].cells[1].textContent = `${requests[requestIndex].requestId.toString().slice(0, 4)}...${requests[requestIndex].requestId.toString().slice(-4)}`;
+        historyTable().rows[requestIndex + 1].cells[1].textContent = `${requests[requestIndex].requestId.toString().slice(0, 4)}...${requests[requestIndex].requestId.toString().slice(-4)}`;
       });
     }
   });
@@ -151,11 +198,11 @@ async function listenForRandomness() {
         clearInterval(timer);
         requests[requestIndex].randomNumber = log.args.randomNumber!;
         updateTimer();
-        (document.getElementById("requestButton") as HTMLButtonElement).disabled = false;
+        requestButton().disabled = false;
       });
     },
   });
 }
 
-document.getElementById("requestButton")!.addEventListener("click", requestRandomNumber);
+requestButton().addEventListener("click", requestRandomNumber);
 listenForRandomness();

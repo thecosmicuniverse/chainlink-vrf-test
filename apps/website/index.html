@@ -8,13 +8,20 @@
   </head>
   <body>
     <h1>Chainlink VRF Timer</h1>
+    <p>Chain: Avalanche Fuji Testnet</p>
     <p>
       Contract:
       <a href="https://testnet.snowscan.xyz/address/0xDF2F72B1C3077EfB4F829a9dd5937A92263f6AFA#code" target="_blank">
         0xDF2F72B1C3077EfB4F829a9dd5937A92263f6AFA
       </a>
     </p>
-    <button id="requestButton">Request Random Number</button>
+    <p>
+      Balance:
+      <span id="balance">0</span>
+      AVAX
+    </p>
+    <button id="requestButton" disabled>Request Random Number</button>
+    <p id="error" style="display: none;"></p>
     <table id="history">
       <thead>
         <tr>
